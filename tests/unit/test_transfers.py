@@ -70,3 +70,27 @@ class TestTransfers:
         account.balance = 500
         account.outgoing_transfer(498, "fast")
         assert account.balance == -3
+
+    def test_balance_history_normal_transfer_personal(self):
+        account = PersonalAccount("John", "Doe", "61352353511")
+        account.incoming_transfer(500)
+        account.outgoing_transfer(300)
+        assert account.history == [500, -300]
+    
+    def test_balance_history_normal_transfer_company(self):
+        account = CompanyAccount("Firma5", "3416755433")
+        account.incoming_transfer(1000)
+        account.outgoing_transfer(550)
+        assert account.history == [1000, -550]
+
+    def test_balance_history_fast_transfer_personal(self):
+        account = PersonalAccount("John", "Doe", "61352353511")
+        account.incoming_transfer(200)
+        account.outgoing_transfer(50, "fast")
+        assert account.history == [200, -50, -1]
+    
+    def test_balance_history_fast_transfer_company(self):
+        account = CompanyAccount("Firma5", "3416755433")
+        account.incoming_transfer(550)
+        account.outgoing_transfer(250, "fast")
+        assert account.history == [550, -250, -5]
