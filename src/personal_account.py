@@ -2,6 +2,7 @@ from src.account import Account
 
 class PersonalAccount(Account):
     def __init__(self, first_name, last_name, pesel, promo_code = None, balance = 0):
+        self.history = []
         self.first_name = first_name
         self.last_name = last_name
         self.balance = 50 if self.is_older_than_60(pesel) and self.is_promo_code_valid(promo_code) else balance
