@@ -26,3 +26,27 @@ class PersonalAccount(Account):
         elif pesel.isdigit() and int(pesel[2:4]) > 21 and int(pesel[2:4]) < 32:
             return True
         return False
+    
+    def submit_for_loan(self, amount):
+        accepted = False
+        if(self.three_incomming_transfers()):
+            accepted = True
+
+        if(self.sum_of_five(amount)):
+            accepted = True
+        
+        if(accepted):
+            self.balance += amount
+            return True
+        
+        return False
+    
+    def three_incomming_transfers(self):
+        if len(self.history) >= 3 and all(i >= 0 for i in self.history[-3:]):
+            return True
+        return False
+    
+    def sum_of_five(self, amount):
+        if len(self.history) >= 5 and sum(self.history[-5:]) > amount:
+            return True
+        return False
