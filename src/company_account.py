@@ -12,3 +12,14 @@ class CompanyAccount(Account):
             return True
         return False
     
+    def take_loan(self, amount):
+        accepted = False
+
+        if(self.balance * 2 >= amount and -1775 in self.history):
+            accepted = True
+
+        if(accepted):
+            self.balance += amount
+            return True
+        
+        return False
