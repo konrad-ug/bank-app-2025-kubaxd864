@@ -10,6 +10,8 @@ def create_account():
     data = request.get_json()
     print(f"Create account request: {data}")
     account = PersonalAccount(data["name"], data["surname"], data["pesel"])
+    if(registry.find_by_id_number(account.pesel)):
+        return jsonify({"error": "Pesel już jest przypisany do konta"}), 409
     registry.add_account(account)
     return jsonify({"message": "Account created"}), 201
 
@@ -41,6 +43,42 @@ def find_by_pesel(pesel):
         "balance": account.balance
     }
     return jsonify(account_data), 200
+
+@app.route("/api/account/<pesel>/transfer", methods=["POST"])
+def transfer(pesel):
+    data = request.get_json() or {}
+    account = registry.find_by_id_number(pesel)
+    if account is None:
+        return jsonify({"error": "Account not found"}), 404
+    
+    t = data.get("type")
+    if t not in ("incoming", "outgoing", "fast"):
+        return jsonify({"error": "Nieznany typ transakcji"}), 405
+
+    if "amount" not in data:
+        return jsonify({"error": "Nie podano kwoty"}), 400
+    
+    if not isinstance(data["amount"], (int, float)):
+        return jsonify({"error": "Niepoprawny typ kwoty"}), 400
+    
+    if t == "incoming":
+        account.incoming_transfer(data["amount"])
+        return jsonify({"message": "Zlecenie przyjęto do realizacji"}), 200
+
+    if t == "outgoing":
+        prev_balance = account.balance
+        account.outgoing_transfer(data["amount"])
+        if account.balance == prev_balance:
+            return jsonify({"error": "Niewystarczające Środki na koncie"}), 422
+        return jsonify({"message": "Zlecenie przyjęto do realizacji"}), 200
+    
+    if t == "fast":
+        prev_balance = account.balance
+        account.outgoing_transfer(data["amount"], "fast")
+        if account.balance == prev_balance:
+            return jsonify({"error": "Niewystarczające Środki na koncie"}), 422
+        return jsonify({"message": "Zlecenie przyjęto do realizacji"}), 200
+
 
 
 @app.route("/api/accounts/<pesel>", methods=['PATCH'])
