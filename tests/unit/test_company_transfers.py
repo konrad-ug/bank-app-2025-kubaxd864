@@ -4,7 +4,7 @@ import pytest
 class TestCompanyTransfers:
     @pytest.fixture
     def account(self):
-        account = CompanyAccount("Firma1", "3423454333")
+        account = CompanyAccount("Firma1", "8461627563")
         return account
 
     def test_balance_add_CompanyAcc(self, account: CompanyAccount):
@@ -55,7 +55,7 @@ class TestCompanyTransfers:
         assert account.balance == 5000
 
     def test_fast_fee_applied_even_if_amount_exceeds_balance(company_account_class):
-        acc = CompanyAccount("FirmaX", "1234567890")
+        acc = CompanyAccount("FirmaX", "8461627563")
         acc.balance = 3
         acc.outgoing_transfer(10, "fast")
         assert acc.balance == -2   
