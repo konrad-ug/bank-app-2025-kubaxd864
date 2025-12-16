@@ -96,3 +96,18 @@ class TestPrivateTransfers:
         acc.outgoing_transfer(100, "fast")
         assert acc.balance == 1  
         assert acc.history == [-1] 
+
+def test_incoming_transfer_invalid_amount_does_not_change_balance():
+    acc = PersonalAccount("A","B","61352353511")
+    acc.balance = 100
+    acc.incoming_transfer(-10)
+    assert acc.balance == 100
+    acc.incoming_transfer("XD")
+    assert acc.balance == 100
+
+
+def test_outgoing_transfer_invalid_or_too_large_no_change():
+    acc = PersonalAccount("A","B","61352353511")
+    acc.balance = 50
+    acc.outgoing_transfer(100)
+    assert acc.balance == 50

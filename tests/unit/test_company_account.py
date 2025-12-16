@@ -27,3 +27,18 @@ class TestCompanyAccount:
     def test_is_nip_number_to_short(self):
         with pytest.raises(ValueError):
             CompanyAccount("Firma1", "3423454")
+
+    def test_company_account_mf_api_code_wl_115_causes_invalid_nip(self, mocker: MockerFixture):
+        mock_response = mocker.Mock()
+        mock_response.json.return_value = {"code": "WL-115"}
+        mocker.patch("src.company_account.requests.get", return_value=mock_response)
+        with pytest.raises(ValueError):
+            CompanyAccount("Firma","8461627563")
+
+
+    def test_company_account_mf_api_subject_none_causes_invalid_nip(self, mocker: MockerFixture):
+        mock_response = mocker.Mock()
+        mock_response.json.return_value = {"result": {}}
+        mocker.patch("src.company_account.requests.get", return_value=mock_response)
+        with pytest.raises(ValueError):
+            CompanyAccount("Firma","8461627563")
