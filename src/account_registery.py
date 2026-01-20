@@ -33,7 +33,6 @@ class AccountRegistery:
         account = self.find_by_id_number(id_number)
         if account is None:
             return False
-        
         self.accounts.remove(account)
         return True
 

@@ -59,4 +59,4 @@ class TestCompanyTransfers:
         acc.balance = 3
         acc.outgoing_transfer(10, "fast")
         assert acc.balance == -2   
-        assert acc.history == [-5]   
+        assert acc.history == [-5] 

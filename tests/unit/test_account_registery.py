@@ -1,5 +1,7 @@
 from src.personal_account import PersonalAccount
 from src.account_registery import AccountRegistery
+from src.account_registery import AccountRegistery
+from src.account import Account
 import pytest
 
 
@@ -38,3 +40,24 @@ class TestAccountRegistery:
         account2 = PersonalAccount("James", "May", "75022353511")
         register.add_account(account2)
         assert register.find_by_id_number("75022351511") == None
+
+    def test_update_surname(self, register, account):
+        register.add_account(account)
+        assert register.update_account_by_id(account.pesel, surname="NewSurname") is True
+        assert account.last_name == "NewSurname"
+
+def test_send_history_else_branch_returns_false():
+    acc = Account()
+    acc.history = [1, 2, 3]
+    assert acc.send_history_via_email("a@b.c") is False
+
+
+def test_account_registery_update_and_delete_behaviour():
+    reg = AccountRegistery()
+    acc = PersonalAccount("X","Y","61352353511")
+    reg.add_account(acc)
+    assert reg.update_account_by_id(acc.pesel, name="New") is True
+    assert acc.first_name == "New"
+    assert reg.update_account_by_id("00000000000", name="No") is False
+    assert reg.delete_account_by_id(acc.pesel) is True
+    assert reg.delete_account_by_id(acc.pesel) is False
