@@ -14,7 +14,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# lib/ - commented out because we use a local lib folder
 lib64/
 parts/
 sdist/
