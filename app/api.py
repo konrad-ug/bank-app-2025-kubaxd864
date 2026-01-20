@@ -1,6 +1,6 @@
+from flask import Flask, request, jsonify
 from src.account_registery import AccountRegistery
 from src.personal_account import PersonalAccount
-from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 registry = AccountRegistery()
@@ -8,7 +8,6 @@ registry = AccountRegistery()
 @app.route("/api/create_account", methods=['POST'])
 def create_account():
     data = request.get_json()
-    print(f"Create account request: {data}")
     account = PersonalAccount(data["name"], data["surname"], data["pesel"])
     if(registry.find_by_id_number(account.pesel)):
         return jsonify({"error": "Pesel już jest przypisany do konta"}), 409
