@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from src.account_registery import AccountRegistery
 from src.personal_account import PersonalAccount
+from src.mongo import MongoAccountsRepository
 
 app = Flask(__name__)
 registry = AccountRegistery()
@@ -99,3 +100,17 @@ def delete_account(pesel):
         return jsonify({"message": "Account not found"}), 404
     
     return jsonify({"message": "Account deleted"}), 200
+
+@app.route("/api/accounts/save", methods=['POST'])
+def save_accounts():
+    repo = MongoAccountsRepository()
+    repo.save_all(registry.return_accounts_list())
+    return jsonify({"message": "Accounts saved"}), 201
+
+
+@app.route("/api/accounts/load", methods=['POST'])
+def load_accounts():
+    repo = MongoAccountsRepository()
+    accounts = repo.load_all()
+    registry.accounts = accounts
+    return jsonify({"message": "Accounts loaded", "count": len(accounts)}), 200

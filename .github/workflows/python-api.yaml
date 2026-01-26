@@ -15,5 +15,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+      - name: start mongo
+        run: |
+          docker run -d -p 27017:27017 --name bank_app_mongo -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password mongo:latest
+          sleep 10
       - name: Run API tests
         run: python -m pytest tests/api -v

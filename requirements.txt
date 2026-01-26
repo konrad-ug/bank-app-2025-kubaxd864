@@ -3,3 +3,4 @@ coverage==6.5.0
 Flask==3.0.3
 requests
 pytest_mock
+pymongo
