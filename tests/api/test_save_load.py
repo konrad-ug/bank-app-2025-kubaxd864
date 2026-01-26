@@ -1,11 +1,17 @@
 import pytest
+from unittest.mock import patch
 from app.api import app
+from src.personal_account import PersonalAccount
 
 @pytest.fixture
 def client():
     app.testing = True
-    with app.test_client() as client:
-        yield client
+    with patch("app.api.MongoAccountsRepository") as mock_repo_cls:
+        mock_repo_instance = mock_repo_cls.return_value
+        expected_account = PersonalAccount("Test", "User", "99010112345")
+        mock_repo_instance.load_all.return_value = [expected_account]
+        with app.test_client() as client:
+            yield client
 
 def test_save_and_load_accounts(client):
     pesel = "99010112345"
